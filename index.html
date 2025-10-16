@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Merged CVD Report</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Merriweather:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* =======================================================
+      | Page-1 Styles (from style.css)
+      ======================================================= */
+      /* Existing Global Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* Base Body Styles (Page 1 sets the background) */
+      body {
+        background-color: #616261;
+        font-family: Georgia, Times, "Times New Roman", serif;
+      }
+
+      /* ==============================
+      MOBILE INTRO (Full Height)
+      ============================== 
+      */
+      .green {
+        background-color: #616261;
+        width: 100%;
+        /* CRITICAL CHANGE: Set height to 100vh for a full-screen view */
+        height: 100vh;
+        color: #fff;
+        text-align: center;
+        /* Use Flexbox to vertically center the text content */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Center vertically */
+        align-items: center; /* Center horizontally */
+
+        /* Remove excessive fixed padding and rely on Flexbox centering */
+        padding: 0 20px;
+      }
+
+      .green h1 {
+        /* Adjust font size for mobile readability and impact */
+        font-size: 92px;
+        line-height: 1;
+        margin-bottom: 5px;
+        text-shadow: 2px 5px 5px #424242;
+      }
+      .green h5 {
+        font-size: 34px; /* Slightly larger for emphasis */
+        line-height: 1.2;
+      }
+
+      /* ==============================
+      CVD STATEMENTS SEQUENCE 
+      ============================== 
+      */
+      .stat-sequence {
+        background-color: #616261; /* Dark background color */
+        width: 100%;
+        /* The height determines the total scroll distance for this section */
+        height: 400vh; /* 4 statements * 100vh each = 400vh scroll space */
+        position: relative;
+      }
+
+      .stat-pin-container {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+
+        /* Pin this container for the entire sequence */
+        position: sticky;
+        top: 0;
+
+        /* Ensure the text is readable and occupies a good portion of the screen */
+        padding: 0 10vw; /* Padding on the sides for desktop/mobile */
+        text-align: center;
+      }
+
+      .stat-text {
+        color: #fff;
+        /* Position elements to overlap exactly in the center */
+        position: absolute;
+        width: 80%; /* Limit text width for better readability */
+        max-width: 900px;
+
+        /* Styles for the statement text */
+        font-size: clamp(24px, 4vw, 52px); /* Responsive font size */
+        line-height: 1.4;
+        font-weight: 300;
+
+        /* Start all statements invisible */
+        opacity: 0;
+      }
+
+      .pink {
+        background-color: #616261;
+
+        margin: 120px auto 40px auto;
+        text-align: center;
+        color: #fff;
+      }
+
+      .pink h2 {
+        font-family: Georgia, "Times New Roman", Times, serif;
+        text-align: left;
+      }
+
+      /* ==============================
+      MOBILE SEQUENCE SECTION
+      ============================== 
+      */
+
+      .pin-sequence {
+        height: 100vh;
+        position: relative;
+      }
+
+      .scroll-container {
+        /* Stacked layout for mobile */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: 100vh;
+        padding-top: 20px;
+      }
+
+      /* Canvas: Full width on mobile */
+      canvas {
+        width: 90vw;
+        height: auto;
+        aspect-ratio: 1702 / 1550;
+        image-rendering: crisp-edges;
+        image-rendering: pixelated;
+        margin-bottom: 20px;
+      }
+
+      /* Text Container: Full width below canvas on mobile */
+      .scroll-text {
+        padding: 0 20px;
+        width: 100%;
+        text-align: center;
+        font-size: 1rem;
+        color: #fff;
+      }
+
+      #weight-text {
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      /* ==============================
+      DESKTOP STYLES (Min-width: 1025px)
+      ============================== 
+      */
+
+      @media (min-width: 1025px) {
+        .green {
+          /* Revert to desktop styles */
+          height: 1550px; /* Restore desktop height if necessary for the rest of the flow */
+          padding-top: 300px;
+          padding-bottom: 400px;
+          font-size: 52px;
+          line-height: 50px;
+          /* Reset flex properties */
+          display: block;
+          justify-content: initial;
+          align-items: initial;
+          text-align: center;
+        }
+        .green h1 {
+          font-size: 82px;
+        }
+
+        /* Sequence container reverts to side-by-side */
+        .scroll-container {
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          padding-top: 0;
+        }
+
+        canvas {
+          width: 50vw;
+          margin-bottom: 0;
+        }
+
+        .scroll-text {
+          padding: 150px;
+          width: 50vw;
+          text-align: left;
+          font-size: 1.5rem;
+        }
+
+        #weight-text {
+          font-size: 2rem;
+        }
+      }
+
+      /* =======================================================
+      | Page-2 Styles (from <style> block)
+      ======================================================= */
+      /* Overriding/extending body styles for Page-2 content */
+      .cvd-section {
+        width: 100%;
+        padding: 40px 20px;
+        box-sizing: border-box;
+        margin-top: 200px;
+      }
+
+      .content {
+        max-width: 580px;
+        margin: 0 auto;
+      }
+
+      .intro {
+        font-size: 22px;
+        line-height: 30px;
+        font-weight: 400;
+        margin-bottom: 36px;
+        color: #fff;
+      }
+
+      /* Note: H2 is now styled by Page-2 rules for the .content section */
+      .cvd-section h2 {
+        font-family: "Merriweather", serif;
+        font-size: 32px;
+        line-height: 42px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #fff;
+      }
+
+      .disease-info p {
+        font-size: 22px;
+        line-height: 30px;
+        margin-bottom: 42px;
+        color: #fff;
+      }
+
+      .disease-info strong {
+        font-family: "Merriweather", serif;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 32px;
+        color: #fff;
+      }
+
+      .heart-section {
+        margin-top: 160px;
+      }
+
+      .heart-section h3 {
+        font-family: "Merriweather", serif;
+        font-size: 32px;
+        line-height: 42px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #fff;
+      }
+
+      .heart-section p {
+        font-size: 22px;
+        line-height: 34px;
+        font-weight: 400;
+        color: #fff;
+      }
+
+      /* ===== Responsive text scaling for main content ===== */
+      @media (max-width: 640px) {
+        .content {
+          padding: 0 10px;
+        }
+
+        .cvd-section h2,
+        .heart-section h3 {
+          font-size: 26px;
+          line-height: 36px;
+        }
+
+        .disease-info strong {
+          font-size: 20px;
+          line-height: 28px;
+        }
+
+        .disease-info p,
+        .intro,
+        .heart-section p {
+          font-size: 18px;
+          line-height: 26px;
+        }
+      }
+
+      /* ===== AI2HTML Responsive Fix ===== */
+      .image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .ai2html {
+        width: 100%;
+        max-width: 568px;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      .ai2html .g-artboard {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+
+      .ai2html .g-artboard > div:first-child {
+        width: 100%;
+        height: 0;
+        padding-bottom: calc(382 / 568 * 100%);
+      }
+
+      .ai2html .g-aiImg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* Centered, scaled inner layer (anchored left, JS handles centering) */
+      .ai2html .g-artboard-inner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: top left;
+        width: 568px;
+        height: 382px;
+        transition: transform 0.25s ease-in-out;
+      }
+
+      /* Default AI2HTML text */
+      .ai2html p {
+        margin: 0;
+        color: #fff;
+        font-size: 18px;
+        line-height: 24px;
+      }
+
+      .ai2html .g-aiAbs {
+        position: absolute;
+      }
+
+      .ai2html .g-pstyle0 {
+        text-align: right;
+      }
+      .ai2html .g-pstyle1 {
+        font-weight: 700;
+        font-style: italic;
+        text-align: right;
+      }
+      .ai2html .g-pstyle2 {
+        font-weight: 700;
+        font-style: italic;
+      }
+
+      /* Mobile readability boost */
+      @media (max-width: 768px) {
+        .ai2html p {
+          font-size: 18px;
+          line-height: 24px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .ai2html p {
+          font-size: 18px;
+          line-height: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="green">
+      <h1>Gone Too Soon</h1>
+      <br />
+      <h5>The Rise of Young Heart Deaths</h5>
+    </section>
+
+    <section class="stat-sequence">
+      <div class="stat-pin-container">
+        <p class="stat-text"></p>
+        <p class="stat-text"></p>
+        <p class="stat-text"></p>
+        <p class="stat-text"></p>
+      </div>
+    </section>
+
+    <section class="pin-sequence">
+      <div class="scroll-container">
+        <canvas id="seq-canvas" width="1702" height="1550"></canvas>
+        <div class="scroll-text"><div id="weight-text"></div></div>
+      </div>
+    </section>
+
+    <section class="cvd-section">
+      <div class="content">
+        <p class="intro">
+          <strong>Cardiovascular diseases (CVD)</strong> are conditions that
+          affect <br />1. heart <br />2. blood vessels
+        </p>
+
+        <h2>Deaths resulting from major circulatory system diseases in 2020</h2>
+
+        <div class="image-container">
+          <div id="g-Bubbles-box" class="ai2html">
+            <div id="g-Bubbles-Artboard_1" class="g-artboard">
+              <div></div>
+              <div class="g-artboard-inner">
+                <img
+                  class="g-aiImg"
+                  alt="Deaths from circulatory system diseases"
+                  src="images/Bubbles-Artboard_1.png"
+                />
+                <div
+                  class="g-aiAbs"
+                  style="top: 7.8%; right: 5.1%; width: 27.5%"
+                >
+                  <p class="g-pstyle0">Cerebrovascular diseases</p>
+                  <p class="g-pstyle1">4,962</p>
+                </div>
+                <div
+                  class="g-aiAbs"
+                  style="top: 7.8%; left: 4.4%; width: 25.9%"
+                >
+                  <p>Ischaemic heart disease</p>
+                  <p class="g-pstyle2">15,761</p>
+                </div>
+                <div
+                  class="g-aiAbs"
+                  style="top: 69%; right: 5.3%; width: 19.5%"
+                >
+                  <p class="g-pstyle0">Other heart diseases</p>
+                  <p class="g-pstyle1">7,974</p>
+                </div>
+                <div
+                  class="g-aiAbs"
+                  style="top: 70.2%; left: 4.4%; width: 24.8%"
+                >
+                  <p>Hypertensive diseases</p>
+                  <p class="g-pstyle2">4,266</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="disease-info">
+          <p>
+            <strong>Hypertensive diseases:</strong> Problems from high blood
+            pressure, e.g., heart failure, stroke risk.
+          </p>
+          <p>
+            <strong>Ischaemic heart disease:</strong> Narrowed arteries reduce
+            blood to the heart, causing angina or heart attack.
+          </p>
+          <p>
+            <strong>Other heart diseases:</strong> Includes cardiomyopathy,
+            arrhythmias, congenital defects, and inflammation.
+          </p>
+          <p>
+            <strong>Cerebrovascular diseases:</strong> Blood vessel disorders in
+            the brain, mainly stroke and TIAs (Transient Ischemic Attack).
+          </p>
+        </div>
+
+        <div class="heart-section">
+          <h3>The human heart</h3>
+          <p>
+            The human heart, about the size of a fist, is the body’s strongest
+            muscle. It begins beating just three weeks after conception and, by
+            age 70, will have beaten 2.5 billion times. Through 97,000 km of
+            blood vessels, it pumps blood to deliver oxygen and nutrients while
+            removing waste.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+      // =======================================================
+      // | Page-1 JavaScript (from script.js)
+      // =======================================================
+      const frameCount = 7; // Match the number of images you actually have
+
+      // OR add a 7th text string to textArray so it matches 7 frames.
+
+      const currentFrame = (index) =>
+        `frames/frame_${index.toString().padStart(4, "0")}.jpg`;
+
+      const images = [];
+      const canvas = document.getElementById("seq-canvas");
+      const context = canvas.getContext("2d");
+      const weightText = document.getElementById("weight-text");
+
+      canvas.width = 1702;
+      canvas.height = 1550;
+
+      // 👇 Array of texts to show on the right side for the canvas sequence
+      const textArray = [
+        "Sugath Nuwan, 34, is a father of three and a retired Navy sailor. He is a novelist who has won the hearts of readers by writing more than 1000 novels on Facebook for over 10 years. He died at a young age on August 30 due to a heart attack while on his way to the hospital due to chest pain.",
+        "Not only him, We now hear about young deaths from similar heart attacks every day.",
+        "Among them are famous musicians, politicians, and athletes, and their loss leaves a huge void that society cannot fill.",
+        "More and more individuals between the ages of 20 and 40 are suffering heart attacks. This number is increasing by the day. Out of ten patients presenting for treatment, at least four or five are under the age of 40.",
+        "Data indicates that deaths from ischaemic heart disease in young people have more than doubled over the past decade.",
+        "Reported deaths from ischaemic heart disease in 25-44 year olds rose sharply from 228 in 2010 to 620 in 2020.",
+        ".",
+      ];
+
+      const preloadImages = () => {
+        for (let i = 0; i < frameCount; i++) {
+          const img = new Image();
+          img.src = currentFrame(i);
+          images.push(img);
+        }
+      };
+
+      function render(index) {
+        const img = images[index];
+        if (!img || !img.complete) return;
+
+        const canvasAspect = canvas.width / canvas.height;
+        const imgAspect = img.width / img.height;
+
+        let drawWidth, drawHeight;
+
+        if (imgAspect > canvasAspect) {
+          drawWidth = canvas.width;
+          drawHeight = canvas.width / imgAspect;
+        } else {
+          drawHeight = canvas.height;
+          drawWidth = canvas.height * imgAspect;
+        }
+
+        const x = (canvas.width - drawWidth) / 2;
+        const y = (canvas.height - drawHeight) / 2;
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(img, x, y, drawWidth, drawHeight);
+      }
+
+      window.addEventListener("load", () => {
+        preloadImages();
+
+        images[0].onload = () => render(0);
+
+        // ===================================
+        // 1. NEW STATEMENTS SEQUENCE (GSAP)
+        // ===================================
+        const statements = [
+          "Cardiovascular disease (CVD) is the world's number one killer.",
+          "Each year, the world loses as many people to cardiovascular disease (CVD) as the entire population of Sri Lanka—about 20.5 million lives.",
+          "In Sri Lanka, cardiovascular disease claims over 90 lives every day. This adds up to more than 33,000 deaths in a year.",
+          "Heart attacks and strokes cause 85% of all CVD deaths.",
+        ];
+
+        const statTexts = gsap.utils.toArray(".stat-text");
+
+        // Assign text content to the paragraphs
+        statTexts.forEach((p, i) => {
+          p.textContent = statements[i];
+        });
+
+        // ... (code before tl timeline definition) ...
+
+        const sequenceDuration = 0.5; // Time for fade-in/out
+        const holdDuration = 0.5; // Time statement is fully visible (1 unit of scroll distance)
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".stat-sequence",
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+            pin: true, // Pin the whole section
+          },
+        });
+
+        // Animate each statement sequentially
+        statTexts.forEach((text, i) => {
+          // 1. Fade In
+          tl.to(text, { opacity: 1, duration: sequenceDuration }, `stat-${i}`)
+
+            // 2. Hold (Keep visible for a period of scroll)
+            .to(text, { opacity: 1, duration: holdDuration });
+
+          // 3. Fade Out (CRITICAL CHANGE: Now includes the last statement)
+          // Every statement, including the last one, needs a fade-out animation.
+          // The previous logic skipped the fade-out for the final element.
+          tl.to(text, { opacity: 0, duration: sequenceDuration });
+        });
+
+        // ... (code after tl timeline definition) ...
+
+        // ===================================
+        // 2. EXISTING CANVAS SEQUENCE (GSAP)
+        // ===================================
+        const scrollObj = { frame: 0 };
+
+        gsap.to(scrollObj, {
+          frame: frameCount - 1,
+          snap: { snapTo: 1, duration: 0.1 },
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".pin-sequence",
+            start: "top top",
+            end: "+=" + frameCount * 500, // gives smoother scroll length
+
+            scrub: true,
+            pin: true,
+            anticipatePin: 1,
+          },
+          onUpdate: () => {
+            const current = Math.round(scrollObj.frame);
+            render(current);
+
+            // 👇 Update text from array, applying the desired split formatting
+            if (textArray[current]) {
+              const fullText = textArray[current];
+              // Regex to split the year (first 4 digits) from the rest of the text
+              const match = fullText.match(/^(\d{4})\s*(.*)$/);
+
+              if (match) {
+                const year = match[1];
+                const count = match[2];
+
+                // Construct the HTML with the required classes and structure
+                weightText.innerHTML = `
+                  <span class="data-year">${year}</span>
+                  <span class="data-count">${count}</span>
+              `;
+              } else {
+                // Fallback for non-year/count text
+                weightText.textContent = fullText;
+                // Ensure single-line text is centered on mobile when not split
+                weightText.innerHTML = fullText;
+              }
+            }
+          },
+        });
+
+        // =======================================================
+        // | Page-2 JavaScript (AI2HTML resize)
+        // =======================================================
+        function resizeAi2html() {
+          const artboard = document.querySelector(".g-artboard");
+          const inner = document.querySelector(".g-artboard-inner");
+          if (!artboard || !inner) return;
+
+          const containerWidth = artboard.clientWidth;
+          const originalWidth = 568;
+          let scale = containerWidth / originalWidth;
+
+          // Slight zoom for readability on small devices
+          if (window.innerWidth < 480) {
+            scale *= 1.15; // phones
+          } else if (window.innerWidth < 768) {
+            scale *= 1.05; // tablets
+          }
+
+          // Calculate horizontal centering offset
+          const scaledWidth = originalWidth * scale;
+          const offsetX = (containerWidth - scaledWidth) / 2;
+
+          inner.style.transform = `translate(${offsetX}px, 0) scale(${scale})`;
+        }
+
+        window.addEventListener("resize", resizeAi2html);
+        // The original Page-1 load listener is already running, so call it here:
+        resizeAi2html();
+      });
+    </script>
+  </body>
+</html>
